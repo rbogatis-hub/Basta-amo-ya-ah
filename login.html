@@ -14,7 +14,7 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Inter', sans-serif;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
         }
 
         :root {
@@ -114,8 +114,7 @@
             color: var(--text);
             font-size: 14px;
             outline: none;
-            transition: border-color 0.2s, box-shadow 0.2s,
-                        background 0.2s;
+            transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
         }
 
         .input-wrap input::placeholder {
@@ -146,14 +145,13 @@
             color: #8493a5;
             box-shadow: none;
             font-size: 17px;
+            border: none;
             cursor: pointer;
         }
 
         .eye-button:hover {
             background: #edf2f8;
             color: var(--primary-dark);
-            box-shadow: none;
-            transform: translateY(-50%);
         }
 
         .show-password {
@@ -180,6 +178,7 @@
             font-size: 12px;
             margin-top: -8px;
             margin-bottom: 14px;
+            min-height: 16px;
         }
 
         .submit-button {
@@ -193,8 +192,7 @@
             font-size: 15px;
             font-weight: 600;
             cursor: pointer;
-            transition: background 0.2s, box-shadow 0.2s,
-                        transform 0.2s;
+            transition: background 0.2s, box-shadow 0.2s, transform 0.2s;
         }
 
         .submit-button:hover {
@@ -270,53 +268,25 @@
 </head>
 
 <body>
-
     <main class="form-container">
-
         <div class="logo" aria-hidden="true">♧</div>
 
         <h2 id="formTitle">Welcome back</h2>
-
-        <p class="subtitle" id="subtitle">
-            Please login to your account
-        </p>
+        <p class="subtitle" id="subtitle">Please login to your account</p>
 
         <form id="authForm">
-
             <div class="field">
                 <label for="username">Username</label>
-
                 <div class="input-wrap">
-                    <input
-                        type="text"
-                        id="username"
-                        placeholder="Enter your username"
-                        autocomplete="username"
-                        required
-                    >
+                    <input type="text" id="username" placeholder="Enter your username" autocomplete="username" required>
                 </div>
             </div>
 
             <div class="field">
                 <label for="password">Password</label>
-
                 <div class="input-wrap">
-                    <input
-                        type="password"
-                        id="password"
-                        class="password-input"
-                        placeholder="Enter your password"
-                        autocomplete="current-password"
-                        required
-                    >
-
-                    <button
-                        type="button"
-                        class="eye-button"
-                        id="togglePassword"
-                        aria-label="Show password"
-                        aria-pressed="false"
-                    >◉</button>
+                    <input type="password" id="password" class="password-input" placeholder="Enter your password" autocomplete="current-password" required>
+                    <button type="button" class="eye-button" id="togglePassword" aria-label="Show password" aria-pressed="false">◉</button>
                 </div>
             </div>
 
@@ -327,53 +297,31 @@
 
             <div class="field" id="confirmField" hidden>
                 <label for="confirmPassword">Confirm Password</label>
-
                 <div class="input-wrap">
-                    <input
-                        type="password"
-                        id="confirmPassword"
-                        class="password-input"
-                        placeholder="Re-enter your password"
-                        autocomplete="new-password"
-                    >
-
-                    <button
-                        type="button"
-                        class="eye-button"
-                        id="toggleConfirmPassword"
-                        aria-label="Show confirm password"
-                        aria-pressed="false"
-                    >◉</button>
+                    <input type="password" id="confirmPassword" class="password-input" placeholder="Re-enter your password" autocomplete="new-password">
+                    <button type="button" class="eye-button" id="toggleConfirmPassword" aria-label="Show confirm password" aria-pressed="false">◉</button>
                 </div>
             </div>
 
             <p id="passwordMatchMessage" hidden></p>
 
-            <button type="submit" class="submit-button" id="submitButton">
-                Login
-            </button>
-
+            <button type="submit" class="submit-button" id="submitButton">Login</button>
             <p id="errorMessage" role="status" aria-live="polite"></p>
 
             <p id="toggleText">
                 Don't have an account?
                 <a href="#" id="toggleLink">Sign Up</a>
             </p>
-
         </form>
 
         <p class="footer-text">Simple, secure, and welcoming.</p>
-
     </main>
 
     <script>
         let isLogin = true;
-
-        // Default login credentials
         const defaultUsername = "Mary";
         const defaultPassword = "#dec24";
 
-        // Get HTML elements
         const authForm = document.getElementById("authForm");
         const formTitle = document.getElementById("formTitle");
         const subtitle = document.getElementById("subtitle");
@@ -385,141 +333,96 @@
         const showPasswordCheckbox = document.getElementById("showPassword");
         const submitButton = document.getElementById("submitButton");
         const errorMessage = document.getElementById("errorMessage");
-        const toggleText = document.getElementById("toggleText");
         const toggleLink = document.getElementById("toggleLink");
         const passwordMatchMessage = document.getElementById("passwordMatchMessage");
 
-        // Switch between Login and Sign Up
+        function updateEyeButton(buttonId, isVisible) {
+            const btn = document.getElementById(buttonId);
+            btn.textContent = isVisible ? "◎" : "◉";
+            btn.setAttribute("aria-label", isVisible ? "Hide password" : "Show password");
+            btn.setAttribute("aria-pressed", String(isVisible));
+        }
+
+        function setPasswordVisibility(input, isVisible, buttonId) {
+            input.type = isVisible ? "text" : "password";
+            updateEyeButton(buttonId, isVisible);
+        }
+
         function toggleForm(event) {
-            if (event) {
-                event.preventDefault();
-            }
-
+            if (event) event.preventDefault();
             isLogin = !isLogin;
-
             authForm.reset();
             errorMessage.textContent = "";
             passwordMatchMessage.textContent = "";
             passwordMatchMessage.hidden = true;
 
-            // Reset password visibility
-            passwordInput.type = "password";
-            confirmPasswordInput.type = "password";
+            setPasswordVisibility(passwordInput, false, "togglePassword");
+            setPasswordVisibility(confirmPasswordInput, false, "toggleConfirmPassword");
             showPasswordCheckbox.checked = false;
-            updateEyeButton("togglePassword", false);
-            updateEyeButton("toggleConfirmPassword", false);
 
             if (isLogin) {
                 formTitle.textContent = "Welcome back";
                 subtitle.textContent = "Please login to your account";
-
                 confirmField.hidden = true;
                 confirmPasswordInput.required = false;
-
                 showPasswordContainer.hidden = false;
                 submitButton.textContent = "Login";
-
-                toggleText.innerHTML =
-                    "Don't have an account? <a href='#' id='toggleLink'>Sign Up</a>";
-
+                toggleLink.parentElement.innerHTML = "Don't have an account? <a href='#' id='toggleLink'>Sign Up</a>";
             } else {
                 formTitle.textContent = "Create account";
                 subtitle.textContent = "Join us and create your account";
-
                 confirmField.hidden = false;
                 confirmPasswordInput.required = true;
-
                 showPasswordContainer.hidden = true;
                 submitButton.textContent = "Create Account";
-
-                toggleText.innerHTML =
-                    "Already have an account? <a href='#' id='toggleLink'>Login</a>";
+                toggleLink.parentElement.innerHTML = "Already have an account? <a href='#' id='toggleLink'>Login</a>";
             }
-
-            // Reconnect the link after updating its HTML
-            document.getElementById("toggleLink").addEventListener(
-                "click", toggleForm
-            );
-
-            // Update autocomplete for the current form
-            passwordInput.autocomplete = isLogin
-                ? "current-password"
-                : "new-password";
+            document.getElementById("toggleLink").addEventListener("click", toggleForm);
+            passwordInput.autocomplete = isLogin ? "current-password" : "new-password";
         }
 
         toggleLink.addEventListener("click", toggleForm);
 
-        // Show/hide password using checkbox
         showPasswordCheckbox.addEventListener("change", function () {
-            passwordInput.type = this.checked ? "text" : "password";
-            updateEyeButton("togglePassword", this.checked);
+            setPasswordVisibility(passwordInput, this.checked, "togglePassword");
         });
 
-        // Show/hide password using eye buttons
-        function setupEyeButton(buttonId, input) {
-            const button = document.getElementById(buttonId);
+        document.getElementById("togglePassword").addEventListener("click", function () {
+            const newState = passwordInput.type === "password";
+            showPasswordCheckbox.checked = newState;
+            setPasswordVisibility(passwordInput, newState, "togglePassword");
+        });
 
-            button.addEventListener("click", function () {
-                const isVisible = input.type === "password";
+        document.getElementById("toggleConfirmPassword").addEventListener("click", function () {
+            setPasswordVisibility(confirmPasswordInput, confirmPasswordInput.type === "password", "toggleConfirmPassword");
+        });
 
-                input.type = isVisible ? "text" : "password";
-
-                if (input === passwordInput) {
-                    showPasswordCheckbox.checked = isVisible;
-                }
-
-                updateEyeButton(buttonId, isVisible);
-            });
-        }
-
-        function updateEyeButton(buttonId, isVisible) {
-            const button = document.getElementById(buttonId);
-
-            button.textContent = isVisible ? "◎" : "◉";
-            button.setAttribute(
-                "aria-label",
-                isVisible ? "Hide password" : "Show password"
-            );
-            button.setAttribute("aria-pressed", String(isVisible));
-        }
-
-        setupEyeButton("togglePassword", passwordInput);
-        setupEyeButton("toggleConfirmPassword", confirmPasswordInput);
-
-        // Check whether passwords match
         function checkPasswordMatch() {
-            const password = passwordInput.value;
-            const confirmPassword = confirmPasswordInput.value;
+            const pwd = passwordInput.value;
+            const confirmPwd = confirmPasswordInput.value;
 
-            if (isLogin || confirmPassword === "") {
+            if (isLogin || confirmPwd === "") {
                 passwordMatchMessage.hidden = true;
-                passwordMatchMessage.textContent = "";
-                return confirmPassword === "";
+                return;
             }
 
             passwordMatchMessage.hidden = false;
-
-            if (password === confirmPassword) {
+            if (pwd === confirmPwd) {
                 passwordMatchMessage.textContent = "✓ Passwords match";
                 passwordMatchMessage.style.color = "#16834a";
-                return true;
             } else {
                 passwordMatchMessage.textContent = "✗ Passwords do not match";
                 passwordMatchMessage.style.color = "#dc5454";
-                return false;
             }
         }
 
         passwordInput.addEventListener("input", checkPasswordMatch);
         confirmPasswordInput.addEventListener("input", checkPasswordMatch);
 
-        // Handle login and registration
         authForm.addEventListener("submit", function (event) {
             event.preventDefault();
-
             const username = usernameInput.value.trim();
             const password = passwordInput.value;
-
             errorMessage.textContent = "";
 
             if (!username || !password) {
@@ -528,82 +431,10 @@
             }
 
             if (isLogin) {
-                // Check default login credentials first
-                if (
-                    username === defaultUsername &&
-                    password === defaultPassword
-                ) {
+                if (username === defaultUsername && password === defaultPassword) {
                     window.location.href = "index.html";
                     return;
                 }
-
-                // Check registered account
                 try {
-                    const storedUsername = localStorage.getItem("username");
-                    const storedPassword = localStorage.getItem("password");
-
-                    if (
-                        storedUsername &&
-                        storedPassword &&
-                        username === storedUsername &&
-                        password === storedPassword
-                    ) {
-                        window.location.href = "index.html";
-                    } else {
-                        errorMessage.textContent =
-                            "Invalid username or password.";
-                    }
-                } catch (error) {
-                    errorMessage.textContent =
-                        "Unable to access saved accounts in this browser.";
-                }
-
-            } else {
-                const confirmPassword = confirmPasswordInput.value;
-
-                if (!confirmPassword) {
-                    errorMessage.textContent =
-                        "Please confirm your password.";
-                    return;
-                }
-
-                if (password !== confirmPassword) {
-                    errorMessage.textContent =
-                        "Passwords do not match.";
-                    return;
-                }
-
-                // Prevent overwriting the default account
-                if (username === defaultUsername) {
-                    errorMessage.textContent =
-                        "This username is reserved. Please choose another.";
-                    return;
-                }
-
-                try {
-                    if (localStorage.getItem("username") === username) {
-                        errorMessage.textContent =
-                            "This username is already registered.";
-                        return;
-                    }
-
-                    // Save account in this browser
-                    localStorage.setItem("username", username);
-                    localStorage.setItem("password", password);
-
-                    alert("Account created successfully! You can now log in.");
-
-                    // Return to login form
-                    toggleForm();
-                    usernameInput.value = username;
-
-                } catch (error) {
-                    errorMessage.textContent =
-                        "Unable to save your account in this browser.";
-                }
-            }
-        });
-    </script>
-
-</body>
-</html>
+                    const storedUser = localStorage.getItem("username");
+                    const stored
