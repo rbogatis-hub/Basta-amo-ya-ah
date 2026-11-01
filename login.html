@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login & Sign Up Page</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        :root {
+            --primary: #5b82ad;
+            --primary-dark: #456b94;
+            --text: #26364a;
+            --muted: #77869a;
+            --border: #e0e7ef;
+            --input-bg: #f8fafc;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+            background:
+                radial-gradient(circle at top left, #ffffff 0%, transparent 45%),
+                linear-gradient(135deg, #edf2f8, #dce7f2);
+        }
+
+        .form-container {
+            width: 100%;
+            max-width: 410px;
+            padding: 38px 34px;
+            background: rgba(255, 255, 255, 0.96);
+            border: 1px solid rgba(255, 255, 255, 0.9);
+            border-radius: 24px;
+            box-shadow: 0 18px 50px rgba(54, 78, 108, 0.12);
+            animation: appear 0.5s ease;
+        }
+
+        @keyframes appear {
+            from {
+                opacity: 0;
+                transform: translateY(12px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .logo {
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            border-radius: 18px;
+            background: #e8f0fa;
+            color: var(--primary);
+            font-size: 30px;
+        }
+
+        #formTitle {
+            text-align: center;
+            font-size: 27px;
+            font-weight: 700;
+            color: var(--text);
+            letter-spacing: -0.8px;
+            margin-bottom: 9px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: var(--muted);
+            font-size: 14px;
+            line-height: 1.6;
+            margin-bottom: 28px;
+        }
+
+        .field {
+            margin-bottom: 18px;
+        }
+
+        .field label {
+            display: block;
+            margin-bottom: 8px;
+            color: #394b60;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .input-wrap {
+            position: relative;
+        }
+
+        .input-wrap input {
+            width: 100%;
+            padding: 13px 14px;
+            border: 1px solid var(--border);
+            border-radius: 11px;
+            background: var(--input-bg);
+            color: var(--text);
+            font-size: 14px;
+            outline: none;
+            transition: border-color 0.2s, box-shadow 0.2s,
+                        background 0.2s;
+        }
+
+        .input-wrap input::placeholder {
+            color: #a0acba;
+        }
+
+        .input-wrap input:focus {
+            background: #ffffff;
+            border-color: #8eafd2;
+            box-shadow: 0 0 0 4px rgba(91, 130, 173, 0.12);
+        }
+
+        .password-input {
+            padding-right: 48px !important;
+        }
+
+        .eye-button {
+            position: absolute;
+            right: 8px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 34px;
+            height: 34px;
+            margin: 0;
+            padding: 0;
+            border-radius: 8px;
+            background: transparent;
+            color: #8493a5;
+            box-shadow: none;
+            font-size: 17px;
+            cursor: pointer;
+        }
+
+        .eye-button:hover {
+            background: #edf2f8;
+            color: var(--primary-dark);
+            box-shadow: none;
+            transform: translateY(-50%);
+        }
+
+        .show-password {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            margin-top: 3px;
+        }
+
+        .show-password input {
+            width: 15px;
+            height: 15px;
+            accent-color: var(--primary);
+            cursor: pointer;
+        }
+
+        .show-password label {
+            color: var(--muted);
+            font-size: 13px;
+            cursor: pointer;
+        }
+
+        #passwordMatchMessage {
+            font-size: 12px;
+            margin-top: -8px;
+            margin-bottom: 14px;
+        }
+
+        .submit-button {
+            width: 100%;
+            margin-top: 20px;
+            padding: 14px;
+            border: none;
+            border-radius: 11px;
+            background: var(--primary);
+            color: #ffffff;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s, box-shadow 0.2s,
+                        transform 0.2s;
+        }
+
+        .submit-button:hover {
+            background: var(--primary-dark);
+            box-shadow: 0 7px 16px rgba(69, 107, 148, 0.2);
+            transform: translateY(-1px);
+        }
+
+        .submit-button:active {
+            transform: translateY(0);
+        }
+
+        #errorMessage {
+            min-height: 18px;
+            margin-top: 12px;
+            color: #dc5454;
+            font-size: 12px;
+            line-height: 1.5;
+            text-align: center;
+        }
+
+        #toggleText {
+            margin-top: 19px;
+            text-align: center;
+            color: var(--muted);
+            font-size: 13px;
+            line-height: 1.8;
+        }
+
+        #toggleText a {
+            color: var(--primary-dark);
+            font-weight: 600;
+            text-decoration: none;
+        }
+
+        #toggleText a:hover {
+            text-decoration: underline;
+        }
+
+        .footer-text {
+            margin-top: 24px;
+            color: #9aa6b5;
+            font-size: 11px;
+            text-align: center;
+        }
+
+        [hidden] {
+            display: none !important;
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 16px;
+            }
+
+            .form-container {
+                padding: 30px 23px;
+                border-radius: 20px;
+            }
+
+            #formTitle {
+                font-size: 25px;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation: none !important;
+                transition: none !important;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <main class="form-container">
+
+        <div class="logo" aria-hidden="true">♧</div>
+
+        <h2 id="formTitle">Welcome back</h2>
+
+        <p class="subtitle" id="subtitle">
+            Please login to your account
+        </p>
+
+        <form id="authForm">
+
+            <div class="field">
+                <label for="username">Username</label>
+
+                <div class="input-wrap">
+                    <input
+                        type="text"
+                        id="username"
+                        placeholder="Enter your username"
+                        autocomplete="username"
+                        required
+                    >
+                </div>
+            </div>
+
+            <div class="field">
+                <label for="password">Password</label>
+
+                <div class="input-wrap">
+                    <input
+                        type="password"
+                        id="password"
+                        class="password-input"
+                        placeholder="Enter your password"
+                        autocomplete="current-password"
+                        required
+                    >
+
+                    <button
+                        type="button"
+                        class="eye-button"
+                        id="togglePassword"
+                        aria-label="Show password"
+                        aria-pressed="false"
+                    >◉</button>
+                </div>
+            </div>
+
+            <div class="show-password" id="showPasswordContainer">
+                <input type="checkbox" id="showPassword">
+                <label for="showPassword">Show password</label>
+            </div>
+
+            <div class="field" id="confirmField" hidden>
+                <label for="confirmPassword">Confirm Password</label>
+
+                <div class="input-wrap">
+                    <input
+                        type="password"
+                        id="confirmPassword"
+                        class="password-input"
+                        placeholder="Re-enter your password"
+                        autocomplete="new-password"
+                    >
+
+                    <button
+                        type="button"
+                        class="eye-button"
+                        id="toggleConfirmPassword"
+                        aria-label="Show confirm password"
+                        aria-pressed="false"
+                    >◉</button>
+                </div>
+            </div>
+
+            <p id="passwordMatchMessage" hidden></p>
+
+            <button type="submit" class="submit-button" id="submitButton">
+                Login
+            </button>
+
+            <p id="errorMessage" role="status" aria-live="polite"></p>
+
+            <p id="toggleText">
+                Don't have an account?
+                <a href="#" id="toggleLink">Sign Up</a>
+            </p>
+
+        </form>
+
+        <p class="footer-text">Simple, secure, and welcoming.</p>
+
+    </main>
+
+    <script>
+        let isLogin = true;
+
+        // Default login credentials
+        const defaultUsername = "Mary";
+        const defaultPassword = "#dec24";
+
+        // Get HTML elements
+        const authForm = document.getElementById("authForm");
+        const formTitle = document.getElementById("formTitle");
+        const subtitle = document.getElementById("subtitle");
+        const usernameInput = document.getElementById("username");
+        const passwordInput = document.getElementById("password");
+        const confirmPasswordInput = document.getElementById("confirmPassword");
+        const confirmField = document.getElementById("confirmField");
+        const showPasswordContainer = document.getElementById("showPasswordContainer");
+        const showPasswordCheckbox = document.getElementById("showPassword");
+        const submitButton = document.getElementById("submitButton");
+        const errorMessage = document.getElementById("errorMessage");
+        const toggleText = document.getElementById("toggleText");
+        const toggleLink = document.getElementById("toggleLink");
+        const passwordMatchMessage = document.getElementById("passwordMatchMessage");
+
+        // Switch between Login and Sign Up
+        function toggleForm(event) {
+            if (event) {
+                event.preventDefault();
+            }
+
+            isLogin = !isLogin;
+
+            authForm.reset();
+            errorMessage.textContent = "";
+            passwordMatchMessage.textContent = "";
+            passwordMatchMessage.hidden = true;
+
+            // Reset password visibility
+            passwordInput.type = "password";
+            confirmPasswordInput.type = "password";
+            showPasswordCheckbox.checked = false;
+            updateEyeButton("togglePassword", false);
+            updateEyeButton("toggleConfirmPassword", false);
+
+            if (isLogin) {
+                formTitle.textContent = "Welcome back";
+                subtitle.textContent = "Please login to your account";
+
+                confirmField.hidden = true;
+                confirmPasswordInput.required = false;
+
+                showPasswordContainer.hidden = false;
+                submitButton.textContent = "Login";
+
+                toggleText.innerHTML =
+                    "Don't have an account? <a href='#' id='toggleLink'>Sign Up</a>";
+
+            } else {
+                formTitle.textContent = "Create account";
+                subtitle.textContent = "Join us and create your account";
+
+                confirmField.hidden = false;
+                confirmPasswordInput.required = true;
+
+                showPasswordContainer.hidden = true;
+                submitButton.textContent = "Create Account";
+
+                toggleText.innerHTML =
+                    "Already have an account? <a href='#' id='toggleLink'>Login</a>";
+            }
+
+            // Reconnect the link after updating its HTML
+            document.getElementById("toggleLink").addEventListener(
+                "click", toggleForm
+            );
+
+            // Update autocomplete for the current form
+            passwordInput.autocomplete = isLogin
+                ? "current-password"
+                : "new-password";
+        }
+
+        toggleLink.addEventListener("click", toggleForm);
+
+        // Show/hide password using checkbox
+        showPasswordCheckbox.addEventListener("change", function () {
+            passwordInput.type = this.checked ? "text" : "password";
+            updateEyeButton("togglePassword", this.checked);
+        });
+
+        // Show/hide password using eye buttons
+        function setupEyeButton(buttonId, input) {
+            const button = document.getElementById(buttonId);
+
+            button.addEventListener("click", function () {
+                const isVisible = input.type === "password";
+
+                input.type = isVisible ? "text" : "password";
+
+                if (input === passwordInput) {
+                    showPasswordCheckbox.checked = isVisible;
+                }
+
+                updateEyeButton(buttonId, isVisible);
+            });
+        }
+
+        function updateEyeButton(buttonId, isVisible) {
+            const button = document.getElementById(buttonId);
+
+            button.textContent = isVisible ? "◎" : "◉";
+            button.setAttribute(
+                "aria-label",
+                isVisible ? "Hide password" : "Show password"
+            );
+            button.setAttribute("aria-pressed", String(isVisible));
+        }
+
+        setupEyeButton("togglePassword", passwordInput);
+        setupEyeButton("toggleConfirmPassword", confirmPasswordInput);
+
+        // Check whether passwords match
+        function checkPasswordMatch() {
+            const password = passwordInput.value;
+            const confirmPassword = confirmPasswordInput.value;
+
+            if (isLogin || confirmPassword === "") {
+                passwordMatchMessage.hidden = true;
+                passwordMatchMessage.textContent = "";
+                return confirmPassword === "";
+            }
+
+            passwordMatchMessage.hidden = false;
+
+            if (password === confirmPassword) {
+                passwordMatchMessage.textContent = "✓ Passwords match";
+                passwordMatchMessage.style.color = "#16834a";
+                return true;
+            } else {
+                passwordMatchMessage.textContent = "✗ Passwords do not match";
+                passwordMatchMessage.style.color = "#dc5454";
+                return false;
+            }
+        }
+
+        passwordInput.addEventListener("input", checkPasswordMatch);
+        confirmPasswordInput.addEventListener("input", checkPasswordMatch);
+
+        // Handle login and registration
+        authForm.addEventListener("submit", function (event) {
+            event.preventDefault();
+
+            const username = usernameInput.value.trim();
+            const password = passwordInput.value;
+
+            errorMessage.textContent = "";
+
+            if (!username || !password) {
+                errorMessage.textContent = "Please fill out all required fields.";
+                return;
+            }
+
+            if (isLogin) {
+                // Check default login credentials first
+                if (
+                    username === defaultUsername &&
+                    password === defaultPassword
+                ) {
+                    window.location.href = "index.html";
+                    return;
+                }
+
+                // Check registered account
+                try {
+                    const storedUsername = localStorage.getItem("username");
+                    const storedPassword = localStorage.getItem("password");
+
+                    if (
+                        storedUsername &&
+                        storedPassword &&
+                        username === storedUsername &&
+                        password === storedPassword
+                    ) {
+                        window.location.href = "index.html";
+                    } else {
+                        errorMessage.textContent =
+                            "Invalid username or password.";
+                    }
+                } catch (error) {
+                    errorMessage.textContent =
+                        "Unable to access saved accounts in this browser.";
+                }
+
+            } else {
+                const confirmPassword = confirmPasswordInput.value;
+
+                if (!confirmPassword) {
+                    errorMessage.textContent =
+                        "Please confirm your password.";
+                    return;
+                }
+
+                if (password !== confirmPassword) {
+                    errorMessage.textContent =
+                        "Passwords do not match.";
+                    return;
+                }
+
+                // Prevent overwriting the default account
+                if (username === defaultUsername) {
+                    errorMessage.textContent =
+                        "This username is reserved. Please choose another.";
+                    return;
+                }
+
+                try {
+                    if (localStorage.getItem("username") === username) {
+                        errorMessage.textContent =
+                            "This username is already registered.";
+                        return;
+                    }
+
+                    // Save account in this browser
+                    localStorage.setItem("username", username);
+                    localStorage.setItem("password", password);
+
+                    alert("Account created successfully! You can now log in.");
+
+                    // Return to login form
+                    toggleForm();
+                    usernameInput.value = username;
+
+                } catch (error) {
+                    errorMessage.textContent =
+                        "Unable to save your account in this browser.";
+                }
+            }
+        });
+    </script>
+
+</body>
+</html>

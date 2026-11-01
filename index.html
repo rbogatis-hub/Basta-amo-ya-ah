@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home - Personal Website</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        header {
+            background: #2c3e50;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        nav {
+            background: #34495e;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        nav ul li {
+            position: relative;
+        }
+
+        nav a {
+            display: block;
+            padding: 14px 22px;
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: background 0.3s;
+        }
+
+        nav a:hover {
+            background: #4a6583;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background: #fff;
+            min-width: 200px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.15);
+            z-index: 200;
+        }
+
+        .dropdown-content a {
+            color: #2c3e50;
+            padding: 12px 18px;
+            display: block;
+        }
+
+        .dropdown-content a:hover {
+            background: #f0f4f8;
+        }
+
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+
+        .logout-button {
+            background: #e74c3c;
+        }
+
+        .logout-button:hover {
+            background: #c0392b;
+        }
+
+        /* Slider */
+        .slider {
+            overflow: hidden;
+            position: relative;
+        }
+
+        .slides {
+            display: flex;
+            width: 300%;
+            transition: transform 0.5s ease-in-out;
+        }
+
+        .slide {
+            width: 100%;
+            position: relative;
+        }
+
+        .slide img {
+            width: 100%;
+            height: 450px;
+            object-fit: cover;
+        }
+
+        .text-overlay {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            background: rgba(0,0,0,0.5);
+            padding: 25px 40px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        /* Fun Facts Section */
+        #drop {
+            padding: 60px 24px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        #drop h2 {
+            text-align: center;
+            font-size: 32px;
+            color: #2c3e50;
+            margin-bottom: 12px;
+        }
+
+        #drop > p {
+            text-align: center;
+            color: #666;
+            max-width: 700px;
+            margin: 0 auto 40px;
+        }
+
+        .funfact-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 24px;
+        }
+
+        .funfact-card {
+            height: 180px;
+            perspective: 1000px;
+        }
+
+        .funfact-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            border-radius: 12px;
+        }
+
+        .funfact-card:hover .funfact-inner {
+            transform: rotateY(180deg);
+        }
+
+        .funfact-front, .funfact-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .funfact-front {
+            background: linear-gradient(135deg, #5b82ad, #456b94);
+            color: white;
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .funfact-back {
+            background: #f8fafc;
+            color: #2c3e50;
+            transform: rotateY(180deg);
+            line-height: 1.6;
+        }
+
+        .see-more-container {
+            text-align: center;
+            margin-top: 40px;
+        }
+
+        .see-more-button {
+            display: inline-block;
+            padding: 12px 32px;
+            background: #5b82ad;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: background 0.3s;
+        }
+
+        .see-more-button:hover {
+            background: #456b94;
+        }
+
+        /* About Section */
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            max-width: 1100px;
+            margin: 60px auto;
+            padding: 0 24px;
+            gap: 40px;
+            align-items: center;
+        }
+
+        .image-section img {
+            width: 320px;
+            border-radius: 12px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+        }
+
+        .quote-section h1 {
+            font-size: 36px;
+            color: #2c3e50;
+            margin-bottom: 16px;
+        }
+
+        .quote-section p {
+            color: #555;
+            line-height: 1.8;
+            margin-bottom: 24px;
+        }
+
+        blockquote {
+            font-style: italic;
+            color: #7f8c8d;
+            border-left: 4px solid #5b82ad;
+            padding-left: 18px;
+            font-size: 17px;
+        }
+
+        /* Lightbox */
+        .lightbox {
+            display: none;
+            position: fixed;
+            z-index: 999;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.9);
+        }
+
+        .lightbox-content {
+            display: block;
+            max-width: 85%;
+            max-height: 85vh;
+            margin: 60px auto;
+        }
+
+        .close {
+            position: absolute;
+            top: 20px;
+            right: 35px;
+            color: white;
+            font-size: 40px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        /* Footer */
+        footer {
+            background: #2c3e50;
+            color: white;
+            text-align: center;
+            padding: 25px;
+            margin-top: 60px;
+        }
+
+        .footer-divider {
+            height: 4px;
+            background: linear-gradient(90deg, #5b82ad, #e74c3c);
+        }
+
+        @media (max-width: 768px) {
+            nav ul { flex-direction: column; }
+            .container { flex-direction: column; text-align: center; }
+            .slide img { height: 280px; }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Welcome to My Personal Website</h1>
+    </header>
+
+    <nav>
+        <ul>
+            <li><a href="index.html">HOME</a></li>
+            <li class="dropdown">
+                <a href="#" class="dropbtn">ABOUT</a>
+                <div class="dropdown-content">
+                    <a href="skills.html">Skills I'm Developing</a>
+                    <a href="goals.html">My Goals as a Student</a>
+                    <a href="funfacts.html">Fun Facts About Me</a>
+                </div>
+            </li>
+            <li><a href="gallery.html">GALLERY</a></li>
+            <li><a href="contact.html">CONTACT</a></li>
+            <li><a href="javascript:void(0);" class="logout-button" onclick="confirmLogout()">LOG OUT</a></li>
+        </ul>
+    </nav>
+
+    <section id="section2"></section>
+
+    <!-- Image Slider -->
+    <div class="slider">
+        <div class="slides">
+            <div class="slide">
+                <img src="1.jpg" alt="Image 1">
+                <div class="text-overlay"><h1>Welcome to my Website!</h1></div>
+            </div>
+            <div class="slide">
+                <img src="2.png" alt="Image 2">
+                <div class="text-overlay"><h1>Text for Image 2</h1></div>
+            </div>
+            <div class="slide">
+                <img src="3.png" alt="Image 3">
+                <div class="text-overlay"><h1>Text for Image 3</h1></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Fun Facts Section -->
+    <section id="drop">
+        <h2>Fun Facts About Me</h2>
+        <p>Welcome to my Fun Facts About Me! Here, you'll get a glimpse into my passions, interests, and the little quirks that make me who I am.</p>
+        
+        <div class="funfact-container">
+            <div class="funfact-card">
+                <div class="funfact-inner">
+                    <div class="funfact-front">
+                        <p>I love Programming!</p>
+                    </div>
+                    <div class="funfact-back">
+                        <p>I can code and make a mean cup of coffee—always a study essential!</p>
+                    </div>
+                </div>
+            </div>
+            <div class="funfact-card">
+                <div class="funfact-inner">
+                    <div class="funfact-front">
+                        <p>I love listening to music</p>
+                    </div>
+                    <div class="funfact-back">
+                        <p>I'm on a mission to try every coffee shop in my town!</p>
+                    </div>
+                </div>
+            </div>
+            <div class="funfact-card">
+                <div class="funfact-inner">
+                    <div class="funfact-front">
+                        <p>I'm quiet but funny</p>
+                    </div>
+                    <div class="funfact-back">
+                        <p>My best code happens when I'm listening to OPM and R&B!</p>
+                    </div>
+                </div>
+            </div>
+            <div class="funfact-card">
+                <div class="funfact-inner">
+                    <div class="funfact-front">
+                        <p>I'm shy but talkative</p>
+                    </div>
+                    <div class="funfact-back">
+                        <p>I keep a list of 100 things to achieve this year—from tiny wins to big dreams!</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="see-more-container">
+            <a href="funfacts.html" class="see-more-button">See More Fun Facts</a>
+        </div>
+    </section>
+
+    <!-- About Me Section -->
+    <div class="container">
+        <div class="image-section">
+            <img src="1786254368547.jpg" alt="Rafael Image">
+        </div>
+        <div class="quote-section">
+            <h1>Hi, I'm Rafael!</h1>
+            <p>I'm an Information Technology student with a passion for front-end web development. I'm excited to explore the ever-evolving world of technology and build projects that make an impact. My interests also include graphic design, responsive web design, and engaging with others through public speaking. Always eager to learn and innovate!</p>
+            <blockquote>"The only way to do great work is to love what you do."</blockquote>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2024 Rafael Ogatis. All rights reserved.</p>
+    </footer>
+    <div class="footer-divider"></div>
+
+    <!-- Lightbox -->
+    <div id="lightbox" class="lightbox" onclick="closeLightbox()">
+        <span class="close" onclick="event.stopPropagation(); closeLightbox()">&times;</span>
+        <img class="lightbox-content" id="lightboxImage" src="" alt="">
+    </div>
+
+    <script>
+        // Image Slider
+        const slides = document.querySelector('.slides');
+        let index = 0;
+
+        function showNextSlide() {
+            index = (index + 1) % 3;
+            slides.style.transform = 'translateX(' + (-index * 100) + '%)';
+        }
+        setInterval(showNextSlide, 3000);
+
+        // Lightbox Functions
+        function openLightbox(imageSrc) {
+            const lightbox = document.getElementById('lightbox');
+            const lightboxImage = document.getElementById('lightboxImage');
+            lightboxImage.src = imageSrc;
+            lightbox.style.display = 'block';
+            document.querySelector('header').style.display = 'none';
+            document.querySelector('nav').style.display = 'none';
+        }
+
+        function closeLightbox() {
+            const lightbox = document.getElementById('lightbox');
+            lightbox.style.display = 'none';
+            document.querySelector('header').style.display = 'block';
+            document.querySelector('nav').style.display = 'flex';
+        }
+
+        // Logout Function
+        function confirmLogout() {
+            if (confirm("Are you sure you want to log out?")) {
+                localStorage.removeItem('isLoggedIn');
+                window.location.href = 'login.html';
+            }
+        }
+    </script>
+</body>
+</html>
